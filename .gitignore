@@ -25,3 +25,7 @@ desktop.ini
 
 # 백업 파일
 *.bak
+
+# 포트폴리오 무관 파일
+weather.txt
+weather_fetch.py
