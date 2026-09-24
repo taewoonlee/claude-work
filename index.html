@@ -64,10 +64,19 @@
       padding: 0.3rem 1rem; border-radius: 999px;
       margin-bottom: 1.5rem; text-transform: uppercase;
     }
+    .hero-name-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 1rem; margin-bottom: 0.75rem;
+    }
+    .hero-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.6);
+      object-fit: cover; flex-shrink: 0;
+    }
     .hero-name {
       font-size: clamp(2.5rem, 6vw, 4rem);
       font-weight: 800; color: #fff; letter-spacing: -0.02em;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0;
     }
     .hero-title {
       font-size: 1.25rem; color: rgba(255,255,255,0.85);
@@ -244,7 +253,10 @@
 <section id="hero">
   <div class="hero-inner">
     <span class="hero-badge">Enterprise Cloud Transformation Architect</span>
-    <h1 class="hero-name">이태운</h1>
+    <div class="hero-name-row">
+      <img class="hero-avatar" src="https://avatars.githubusercontent.com/u/31302711?v=4" alt="이태운 프로필 사진" />
+      <h1 class="hero-name">이태운</h1>
+    </div>
     <p class="hero-title">Cloud · AI Infrastructure · Security Architect</p>
     <p class="hero-desc">
       24년 이상의 IT 인프라, 클라우드, AI 플랫폼, 정보보안 분야 경력.<br>
