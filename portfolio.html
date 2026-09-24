@@ -792,6 +792,34 @@
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
+  // ── 욕설 필터 ──
+  const BAD_WORDS = [
+    // 한국어
+    '씨발','시발','ㅅㅂ','쉬발','씨팔','시팔','ㅆㅂ',
+    '개새끼','개새','ㄱㅅㄲ','개색끼',
+    '병신','ㅂㅅ','븅신','벙신',
+    '지랄','ㅈㄹ','지럴',
+    '미친','미쳤','미친놈','미친년','ㅁㅊ',
+    '새끼','새기','ㅅㄲ',
+    '존나','졸라','ㅈㄴ',
+    '꺼져','꺼지','닥쳐','닥쳐라',
+    '바보','멍청','멍청이','찐따','장애','정신병',
+    '창녀','보지','자지','섹스','섹스하','성교',
+    '개년','년놈','년아','놈아',
+    '죽어','죽여','죽겠','뒤져','뒤지',
+    '강간','강x','성폭',
+    // 영어
+    'fuck','f*ck','fck','shit','sh*t','bitch','b*tch',
+    'asshole','ass','bastard','damn','crap','dick','cock',
+    'pussy','nigger','nigga','retard','idiot','stupid',
+    'whore','slut','cunt','motherfucker','moron',
+  ];
+
+  function containsBadWord(text) {
+    const lower = text.toLowerCase().replace(/\s+/g, '');
+    return BAD_WORDS.some(w => lower.includes(w.toLowerCase()));
+  }
+
   submitEl.addEventListener('click', async () => {
     const name    = nameEl.value.trim();
     const content = contentEl.value.trim();
@@ -801,6 +829,12 @@
 
     if (!name)    { feedbackEl.className = 'gb-feedback err'; feedbackEl.textContent = '이름을 입력해 주세요.'; return; }
     if (!content) { feedbackEl.className = 'gb-feedback err'; feedbackEl.textContent = '메시지를 입력해 주세요.'; return; }
+
+    if (containsBadWord(name) || containsBadWord(content)) {
+      feedbackEl.className = 'gb-feedback err';
+      feedbackEl.textContent = '부적절한 표현이 포함되어 있습니다. 내용을 수정해 주세요.';
+      return;
+    }
 
     submitEl.disabled = true;
     submitEl.textContent = '전송 중...';
