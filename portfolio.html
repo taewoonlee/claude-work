@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>이태운 — Cloud Transformation Architect</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --teal: #0d9488;
@@ -227,6 +228,58 @@
       font-size: 0.8rem;
     }
 
+    /* ── GUESTBOOK ── */
+    .gb-form {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .gb-form input,
+    .gb-form textarea {
+      width: 100%;
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--gray-700);
+      background: var(--gray-50);
+      margin-bottom: 0.75rem;
+      outline: none;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+    .gb-form input:focus,
+    .gb-form textarea:focus { border-color: var(--teal); }
+    .gb-form textarea { resize: vertical; min-height: 100px; }
+    .gb-submit {
+      background: var(--teal); color: #fff; border: none;
+      border-radius: 999px; padding: 0.65rem 2rem;
+      font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .gb-submit:hover { background: var(--teal-dark); }
+    .gb-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+    .gb-feedback { font-size: 0.85rem; margin-top: 0.6rem; min-height: 1.2em; }
+    .gb-feedback.ok { color: var(--teal); }
+    .gb-feedback.err { color: #dc2626; }
+    .gb-list { display: grid; gap: 1rem; }
+    .gb-item {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 14px; padding: 1.25rem 1.5rem;
+    }
+    .gb-item-header {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 0.4rem;
+    }
+    .gb-item-name { font-weight: 700; color: var(--gray-900); font-size: 0.95rem; }
+    .gb-item-date { font-size: 0.75rem; color: var(--gray-500); }
+    .gb-item-content { font-size: 0.9rem; color: var(--gray-700); line-height: 1.6; }
+    .gb-empty { color: var(--gray-500); font-size: 0.9rem; text-align: center; padding: 2rem 0; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 640px) {
       nav ul { gap: 1rem; }
@@ -245,6 +298,7 @@
     <li><a href="#projects">프로젝트</a></li>
     <li><a href="#skills">스킬</a></li>
     <li><a href="#certs">자격증</a></li>
+    <li><a href="#guestbook">방명록</a></li>
     <li><a href="#contact">연락처</a></li>
   </ul>
 </nav>
@@ -597,6 +651,25 @@
   </div>
 </section>
 
+<!-- GUESTBOOK -->
+<section id="guestbook">
+  <div class="container">
+    <h2 class="section-title">방명록 <span>Guestbook</span></h2>
+    <p class="section-sub">방문해 주셔서 감사합니다. 자유롭게 메시지를 남겨주세요.</p>
+
+    <div class="gb-form">
+      <input id="gb-name" type="text" placeholder="이름 (최대 50자)" maxlength="50" />
+      <textarea id="gb-content" placeholder="메시지를 입력하세요 (최대 500자)" maxlength="500"></textarea>
+      <button class="gb-submit" id="gb-submit">남기기</button>
+      <p class="gb-feedback" id="gb-feedback"></p>
+    </div>
+
+    <div class="gb-list" id="gb-list">
+      <p class="gb-empty">메시지를 불러오는 중...</p>
+    </div>
+  </div>
+</section>
+
 <!-- CONTACT -->
 <section id="contact">
   <div class="container">
@@ -646,7 +719,7 @@
 </footer>
 
 <script>
-  // 부드러운 스크롤
+  // ── 부드러운 스크롤 ──
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       const target = document.querySelector(a.getAttribute('href'));
@@ -657,7 +730,7 @@
     });
   });
 
-  // 스크롤 시 nav 링크 활성화
+  // ── 스크롤 시 nav 링크 활성화 ──
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('nav a');
   window.addEventListener('scroll', () => {
@@ -669,6 +742,88 @@
       a.style.color = a.getAttribute('href') === '#' + current ? '#0d9488' : '';
     });
   });
+
+  // ── 방명록 (Supabase) ──
+  // Supabase anon key는 클라이언트 공개 키로 RLS 정책으로 보호됩니다.
+  const { createClient } = supabase;
+  const sb = createClient(
+    'https://konjqkvopvywietcimje.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtvbmpxa3ZvcHZ5d2lldGNpbWplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyMzMxNzcsImV4cCI6MjEwNTgwOTE3N30.4p8h-6XVaUWdXzhb4jBXK02iCZepe0qKfwDoizSWFZg'
+  );
+
+  const listEl    = document.getElementById('gb-list');
+  const nameEl    = document.getElementById('gb-name');
+  const contentEl = document.getElementById('gb-content');
+  const submitEl  = document.getElementById('gb-submit');
+  const feedbackEl = document.getElementById('gb-feedback');
+
+  function formatDate(iso) {
+    const d = new Date(iso);
+    return d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+
+  async function loadMessages() {
+    const { data, error } = await sb
+      .from('messages')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(50);
+
+    if (error) {
+      listEl.innerHTML = '<p class="gb-empty">메시지를 불러오지 못했습니다.</p>';
+      return;
+    }
+    if (!data.length) {
+      listEl.innerHTML = '<p class="gb-empty">아직 메시지가 없습니다. 첫 번째 메시지를 남겨보세요!</p>';
+      return;
+    }
+    listEl.innerHTML = data.map(m => `
+      <div class="gb-item">
+        <div class="gb-item-header">
+          <span class="gb-item-name">${escapeHtml(m.name)}</span>
+          <span class="gb-item-date">${formatDate(m.created_at)}</span>
+        </div>
+        <p class="gb-item-content">${escapeHtml(m.content)}</p>
+      </div>
+    `).join('');
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  submitEl.addEventListener('click', async () => {
+    const name    = nameEl.value.trim();
+    const content = contentEl.value.trim();
+
+    feedbackEl.className = 'gb-feedback';
+    feedbackEl.textContent = '';
+
+    if (!name)    { feedbackEl.className = 'gb-feedback err'; feedbackEl.textContent = '이름을 입력해 주세요.'; return; }
+    if (!content) { feedbackEl.className = 'gb-feedback err'; feedbackEl.textContent = '메시지를 입력해 주세요.'; return; }
+
+    submitEl.disabled = true;
+    submitEl.textContent = '전송 중...';
+
+    const { error } = await sb.from('messages').insert({ name, content });
+
+    submitEl.disabled = false;
+    submitEl.textContent = '남기기';
+
+    if (error) {
+      feedbackEl.className = 'gb-feedback err';
+      feedbackEl.textContent = '전송에 실패했습니다. 잠시 후 다시 시도해 주세요.';
+      return;
+    }
+
+    nameEl.value    = '';
+    contentEl.value = '';
+    feedbackEl.className = 'gb-feedback ok';
+    feedbackEl.textContent = '메시지가 등록됐습니다. 감사합니다!';
+    loadMessages();
+  });
+
+  loadMessages();
 </script>
 </body>
 </html>
