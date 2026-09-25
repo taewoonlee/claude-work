@@ -9,14 +9,14 @@
     :root {
       --teal: #0d9488;
       --teal-dark: #0f766e;
-      --teal-light: #ccfbf1;
-      --gray-50: #f9fafb;
-      --gray-100: #f3f4f6;
-      --gray-200: #e5e7eb;
-      --gray-500: #6b7280;
-      --gray-700: #374151;
-      --gray-900: #111827;
-      --white: #ffffff;
+      --teal-light: rgba(13,148,136,0.15);
+      --gray-50: #0f172a;
+      --gray-100: #1e293b;
+      --gray-200: #2d3748;
+      --gray-500: #94a3b8;
+      --gray-700: #cbd5e1;
+      --gray-900: #f1f5f9;
+      --white: #1e293b;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,7 +31,7 @@
     /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0;
-      background: rgba(255,255,255,0.95);
+      background: rgba(15,23,42,0.95);
       backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--gray-200);
       z-index: 100;
@@ -223,7 +223,7 @@
 
     /* ── FOOTER ── */
     footer {
-      background: var(--gray-900); color: var(--gray-500);
+      background: #020617; color: var(--gray-500);
       text-align: center; padding: 1.5rem 2rem;
       font-size: 0.8rem;
     }
@@ -253,6 +253,8 @@
     }
     .gb-form input:focus,
     .gb-form textarea:focus { border-color: var(--teal); }
+    .gb-form input::placeholder,
+    .gb-form textarea::placeholder { color: #4b5563; }
     .gb-form textarea { resize: vertical; min-height: 100px; }
     .gb-submit {
       background: var(--teal); color: #fff; border: none;
