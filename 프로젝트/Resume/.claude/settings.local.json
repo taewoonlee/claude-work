@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:claude-work-gypwikqvv-sora-4ec0.vercel.app)"
+    ]
+  }
+}
