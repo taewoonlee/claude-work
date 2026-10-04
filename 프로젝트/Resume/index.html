@@ -407,12 +407,18 @@
         border-radius: 12px;
         padding: 1rem 1.25rem;
       }
-      .cert-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: var(--teal);
+      .cert-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         flex-shrink: 0;
+      }
+      .cert-icon svg {
+        width: 22px;
+        height: 22px;
       }
       .cert-name {
         font-size: 0.9rem;
@@ -1045,8 +1051,13 @@
           AWS · KT Cloud 공인 자격증 보유 · 지속적 역량 강화
         </p>
         <div class="cert-list">
+          <!-- AWS Solutions Architect -->
           <div class="cert-item">
-            <div class="cert-dot"></div>
+            <div class="cert-icon" style="background:#FF9900;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z" />
+              </svg>
+            </div>
             <div>
               <div class="cert-name">
                 AWS Certified Solutions Architect – Associate
@@ -1054,8 +1065,13 @@
               <div class="cert-year">2018 · Amazon Web Services</div>
             </div>
           </div>
+          <!-- AWS Advanced Networking -->
           <div class="cert-item">
-            <div class="cert-dot"></div>
+            <div class="cert-icon" style="background:#FF9900;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+              </svg>
+            </div>
             <div>
               <div class="cert-name">
                 AWS Certified Advanced Networking – Specialty
@@ -1063,15 +1079,26 @@
               <div class="cert-year">2022 · Amazon Web Services</div>
             </div>
           </div>
+          <!-- KT Cloud -->
           <div class="cert-item">
-            <div class="cert-dot"></div>
+            <div class="cert-icon" style="background:#0066CC;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z" />
+              </svg>
+            </div>
             <div>
               <div class="cert-name">KT Cloud Certified Associate</div>
               <div class="cert-year">2026 · KT Cloud</div>
             </div>
           </div>
+          <!-- NKS Kubernetes -->
           <div class="cert-item">
-            <div class="cert-dot"></div>
+            <div class="cert-icon" style="background:#326CE5;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
             <div>
               <div class="cert-name">
                 NKS(k8s) Cloud Native Advanced Course 수료
@@ -1079,8 +1106,13 @@
               <div class="cert-year">2025 · NHN Cloud</div>
             </div>
           </div>
+          <!-- 산업보안 -->
           <div class="cert-item">
-            <div class="cert-dot"></div>
+            <div class="cert-icon" style="background:#0f766e;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+              </svg>
+            </div>
             <div>
               <div class="cert-name">
                 산업보안 연구회 전문위원 (클라우드 보안 분야)
@@ -1088,8 +1120,13 @@
               <div class="cert-year">현재</div>
             </div>
           </div>
+          <!-- MBA 교육 -->
           <div class="cert-item">
-            <div class="cert-dot"></div>
+            <div class="cert-icon" style="background:#7C3AED;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" />
+              </svg>
+            </div>
             <div>
               <div class="cert-name">
                 서울과학종합대학원 산업보안MBA 보안경영석사
