@@ -62,6 +62,45 @@
       nav a:hover {
         color: var(--teal);
       }
+      nav li.has-sub {
+        position: relative;
+      }
+      nav li.has-sub > a::after {
+        content: " ▾";
+        font-size: 0.7rem;
+      }
+      nav ul.submenu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: -1rem;
+        flex-direction: column;
+        gap: 0;
+        min-width: 160px;
+        margin: 0;
+        padding: 0.5rem 0;
+        background: rgba(15, 23, 42, 0.98);
+        border: 1px solid var(--gray-200);
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      }
+      nav li.has-sub::before {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        height: 1rem;
+      }
+      nav li.has-sub:hover > ul.submenu,
+      nav li.has-sub:focus-within > ul.submenu {
+        display: flex;
+      }
+      nav ul.submenu a {
+        display: block;
+        padding: 0.5rem 1rem;
+        white-space: nowrap;
+      }
 
       /* ── HERO ── */
       #hero {
@@ -618,7 +657,19 @@
       <ul>
         <li><a href="#hero">홈</a></li>
         <li><a href="#career">경력</a></li>
-        <li><a href="#projects">프로젝트</a></li>
+        <li class="has-sub">
+          <a href="#projects">프로젝트</a>
+          <ul class="submenu">
+            <li>
+              <a
+                href="https://aiosec.makenet.co.kr/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >SORA 프로젝트</a
+              >
+            </li>
+          </ul>
+        </li>
         <li><a href="#skills">스킬</a></li>
         <li><a href="#certs">자격증</a></li>
         <li><a href="#guestbook">방명록</a></li>

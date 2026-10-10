@@ -11,3 +11,8 @@
   - `tasks/progress.md` 생성
   - `.env` 템플릿 생성
   - `SECURITY.md` 비상 매뉴얼 생성
+
+## 2026-10-10
+
+- [완료] 상단 메뉴 "프로젝트"에 하위 메뉴 추가 (`index.html`)
+  - "SORA 프로젝트" → https://aiosec.makenet.co.kr/ (새 탭)
