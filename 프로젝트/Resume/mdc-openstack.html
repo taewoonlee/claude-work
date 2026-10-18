@@ -36,77 +36,6 @@
         line-height: 1.6;
       }
 
-      /* ── NAV (메인과 동일) ── */
-      nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        background: rgba(15, 23, 42, 0.95);
-        backdrop-filter: blur(8px);
-        border-bottom: 1px solid var(--gray-200);
-        z-index: 100;
-        padding: 0 2rem;
-      }
-      nav ul {
-        display: flex;
-        gap: 2rem;
-        list-style: none;
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 1rem 0;
-      }
-      nav a {
-        text-decoration: none;
-        color: var(--gray-500);
-        font-size: 0.875rem;
-        font-weight: 500;
-        transition: color 0.2s;
-      }
-      nav a:hover,
-      nav a[aria-current="page"] {
-        color: var(--teal);
-      }
-      nav li.has-sub {
-        position: relative;
-      }
-      nav li.has-sub > a::after {
-        content: " ▾";
-        font-size: 0.7rem;
-      }
-      nav ul.submenu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: -1rem;
-        flex-direction: column;
-        gap: 0;
-        min-width: 160px;
-        margin: 0;
-        padding: 0.5rem 0;
-        background: rgba(15, 23, 42, 0.98);
-        border: 1px solid var(--gray-200);
-        border-radius: 8px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-      }
-      nav li.has-sub::before {
-        content: "";
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        height: 1rem;
-      }
-      nav li.has-sub:hover > ul.submenu,
-      nav li.has-sub:focus-within > ul.submenu {
-        display: flex;
-      }
-      nav ul.submenu a {
-        display: block;
-        padding: 0.5rem 1rem;
-        white-space: nowrap;
-      }
-
       /* ── HEADER ── */
       #hero {
         background:
@@ -121,7 +50,7 @@
             transparent 50%
           ),
           linear-gradient(160deg, #0d1b2a 0%, #0f172a 50%, #0d1f1e 100%);
-        padding: 8rem 2rem 4rem;
+        padding: 4rem 2rem;
         text-align: center;
         border-bottom: 1px solid #2d3748;
       }
@@ -181,7 +110,6 @@
       /* ── SECTION BASE ── */
       section {
         padding: 4rem 2rem;
-        scroll-margin-top: 3.5rem;
       }
       .container {
         max-width: 1120px;
@@ -1013,17 +941,11 @@
         }
       }
       @media (max-width: 640px) {
-        nav {
-          padding: 0 1rem;
-        }
-        nav ul {
-          gap: 1rem;
-        }
         section {
           padding: 3rem 1rem;
         }
         #hero {
-          padding: 6.5rem 1rem 3rem;
+          padding: 3rem 1rem;
         }
         .edge-row {
           grid-template-columns: 1fr;
@@ -1107,37 +1029,6 @@
         <path d="M17 14.3c2.4.2 4 1.8 4.5 4.7" />
       </symbol>
     </svg>
-
-    <!-- NAV -->
-    <nav>
-      <ul>
-        <li><a href="index.html#hero">홈</a></li>
-        <li><a href="index.html#career">경력</a></li>
-        <li class="has-sub">
-          <a href="index.html#projects">프로젝트</a>
-          <ul class="submenu">
-            <li>
-              <a
-                href="https://aiosec.makenet.co.kr/"
-                target="_blank"
-                rel="noopener noreferrer"
-                >SORA 프로젝트</a
-              >
-            </li>
-            <li>
-              <a href="mdc-openstack.html" aria-current="page"
-                >MDC-OpenStack-AI-Platform</a
-              >
-            </li>
-          </ul>
-        </li>
-        <li><a href="#agenda">설명회</a></li>
-        <li><a href="index.html#skills">스킬</a></li>
-        <li><a href="index.html#certs">자격증</a></li>
-        <li><a href="index.html#guestbook">방명록</a></li>
-        <li><a href="index.html#contact">연락처</a></li>
-      </ul>
-    </nav>
 
     <!-- HEADER -->
     <header id="hero">

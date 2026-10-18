@@ -45,3 +45,7 @@
   - Internet → FW → L2 → VIP → Controller/GPU → OVN → VM Network → VM (약 6.4초), SAN A→B→Storage 동시 진행
   - 구성도·서비스 라우팅이 화면에 보일 때 시작(IntersectionObserver), "▶ 패킷 흐름 다시 보기" 버튼 추가
   - 애니메이션을 특정 시점(1.3/2.7/4.7초)에 멈춰 캡처해 순서 확인, 9초 후 정지 확인
+- [수정] `mdc-openstack.html` 상단 메뉴(홈~연락처) 제거
+  - 백업: `mdc-openstack.before-nonav.html.bak`
+  - `<nav>` HTML + 메뉴 전용 CSS 삭제, 고정 메뉴용 상단 여백(8rem→4rem, 모바일 6.5rem→3rem)·scroll-margin 정리
+  - 메인 복귀는 하단 "← 프로젝트 목록으로" 버튼 유지 / 데스크톱·모바일 캡처로 확인
