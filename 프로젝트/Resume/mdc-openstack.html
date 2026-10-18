@@ -346,6 +346,116 @@
         margin-left: 0.4rem;
       }
 
+      /* ── 패킷 흐름 애니메이션 ── */
+      .vline {
+        position: relative;
+        color: var(--net-public);
+      }
+      .vline.int {
+        color: var(--net-internal);
+      }
+      .vline.san {
+        color: var(--net-san);
+      }
+      /* 세로선 위를 위→아래로 이동하는 패킷 */
+      .vline::after,
+      .arrow::after {
+        content: "";
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+        box-shadow: 0 0 6px 2px currentColor;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .vline::after {
+        left: 50%;
+        margin-left: -3px;
+        animation: pkt-down 1.6s linear infinite;
+      }
+      @keyframes pkt-down {
+        0% {
+          top: -3px;
+          opacity: 0;
+        }
+        20%,
+        80% {
+          opacity: 1;
+        }
+        100% {
+          top: calc(100% - 3px);
+          opacity: 0;
+        }
+      }
+      /* 나란한 선은 출발 시간을 엇갈리게 */
+      .connectors .vline:nth-child(2)::after {
+        animation-delay: 0.4s;
+      }
+      .connectors .vline:nth-child(3)::after {
+        animation-delay: 0.8s;
+      }
+      .connectors .vline:nth-child(4)::after {
+        animation-delay: 1.2s;
+      }
+      /* 가로 화살표 위를 왼쪽→오른쪽으로 이동하는 패킷 (모바일은 화살표 회전으로 세로) */
+      .arrow {
+        position: relative;
+        display: inline-block;
+      }
+      .arrow::after {
+        top: 50%;
+        margin-top: -3px;
+        animation: pkt-right 1.2s linear infinite;
+      }
+      @keyframes pkt-right {
+        0% {
+          left: -4px;
+          opacity: 0;
+        }
+        20%,
+        80% {
+          opacity: 1;
+        }
+        100% {
+          left: calc(100% - 2px);
+          opacity: 0;
+        }
+      }
+      /* 가로 막대: 빛이 좌→우로 훑고 지나감 */
+      .bus {
+        position: relative;
+        overflow: hidden;
+      }
+      .bus::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.12),
+          transparent
+        );
+        transform: translateX(-100%);
+        animation: bus-sweep 3s ease-in-out infinite;
+        pointer-events: none;
+      }
+      @keyframes bus-sweep {
+        to {
+          transform: translateX(100%);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .vline::after,
+        .arrow::after,
+        .bus::after {
+          animation: none;
+          display: none;
+        }
+      }
+
       /* ── 1. 엣지 (Internet → FW → Switch) ── */
       .edge-row {
         display: grid;
