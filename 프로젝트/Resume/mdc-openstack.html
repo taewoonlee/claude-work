@@ -181,6 +181,7 @@
       /* ── SECTION BASE ── */
       section {
         padding: 4rem 2rem;
+        scroll-margin-top: 3.5rem;
       }
       .container {
         max-width: 1120px;
@@ -690,6 +691,160 @@
         background: var(--teal-dark);
       }
 
+      /* ── 5. 설명회 (STEP) ── */
+      .step-tag,
+      .section-title .step-tag {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        color: #0f172a;
+        background: #2dd4bf;
+        padding: 0.15rem 0.6rem;
+        border-radius: 999px;
+        margin-right: 0.5rem;
+        vertical-align: middle;
+      }
+      .agenda {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.85rem;
+      }
+      .agenda a {
+        display: block;
+        height: 100%;
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: 12px;
+        padding: 1rem 1.1rem;
+        text-decoration: none;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+      }
+      .agenda a:hover {
+        border-color: rgba(13, 148, 136, 0.6);
+        transform: translateY(-2px);
+      }
+      .agenda small {
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        color: #2dd4bf;
+      }
+      .agenda b {
+        display: block;
+        color: var(--gray-900);
+        font-size: 0.95rem;
+        margin: 0.15rem 0 0.25rem;
+      }
+      .agenda span {
+        font-size: 0.78rem;
+        color: var(--gray-500);
+      }
+      .link-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.25rem;
+      }
+      .link-card .kv {
+        margin-bottom: 1rem;
+      }
+      .link-card .kv dd {
+        word-break: break-all;
+      }
+      .btn {
+        display: inline-block;
+        background: var(--teal);
+        color: #fff;
+        padding: 0.5rem 1.25rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.82rem;
+        transition: background 0.2s;
+      }
+      .btn:hover {
+        background: var(--teal-dark);
+      }
+      .badge-warn {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #fbbf24;
+        background: rgba(251, 191, 36, 0.12);
+        border: 1px solid rgba(251, 191, 36, 0.4);
+        padding: 0.1rem 0.55rem;
+        border-radius: 999px;
+        margin-left: 0.4rem;
+        vertical-align: middle;
+      }
+      .cmd-steps {
+        list-style: none;
+        display: grid;
+        gap: 1.25rem;
+        counter-reset: cmd;
+      }
+      .cmd-steps > li {
+        min-width: 0; /* 긴 명령어가 카드를 밀어내지 않고 .cmd 안에서 가로 스크롤 */
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: 16px;
+        padding: 1.25rem 1.5rem;
+      }
+      .cmd-steps h3 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        margin-bottom: 0.35rem;
+      }
+      .cmd-steps h3::before {
+        counter-increment: cmd;
+        content: counter(cmd) ". ";
+        color: var(--teal);
+      }
+      .cmd-steps p {
+        font-size: 0.8rem;
+        color: var(--gray-500);
+        margin-bottom: 0.75rem;
+      }
+      .cmd {
+        position: relative;
+        background: #020617;
+        border: 1px solid var(--gray-200);
+        border-radius: 10px;
+        padding: 0.9rem 4.5rem 0.9rem 1rem;
+        overflow-x: auto;
+      }
+      .cmd pre {
+        margin: 0;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 0.8rem;
+        line-height: 1.7;
+        color: #e2e8f0;
+        white-space: pre;
+      }
+      .cmd pre .c {
+        color: #64748b;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 0.55rem;
+        right: 0.55rem;
+        background: var(--gray-100);
+        color: var(--gray-700);
+        border: 1px solid var(--gray-200);
+        border-radius: 6px;
+        font-size: 0.72rem;
+        padding: 0.25rem 0.6rem;
+        cursor: pointer;
+      }
+      .copy-btn:hover {
+        color: #2dd4bf;
+        border-color: rgba(13, 148, 136, 0.6);
+      }
+
       footer {
         background: #020617;
         color: var(--gray-500);
@@ -709,6 +864,9 @@
         }
         .connectors {
           display: none;
+        }
+        .agenda {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
         }
       }
       @media (max-width: 640px) {
@@ -736,7 +894,9 @@
         .fip-grid {
           grid-template-columns: 1fr;
         }
-        .flow {
+        .flow,
+        .agenda,
+        .link-grid {
           grid-template-columns: 1fr;
         }
         .route-chain {
@@ -828,6 +988,7 @@
             </li>
           </ul>
         </li>
+        <li><a href="#agenda">설명회</a></li>
         <li><a href="index.html#skills">스킬</a></li>
         <li><a href="index.html#certs">자격증</a></li>
         <li><a href="index.html#guestbook">방명록</a></li>
@@ -854,10 +1015,61 @@
       </div>
     </header>
 
+    <!-- 설명회 순서 -->
+    <section id="agenda" style="background: var(--white)">
+      <div class="container">
+        <h2 class="section-title">설명회 <span>순서</span></h2>
+        <p class="section-sub">
+          데모 환경 소개부터 CMP · GPU VM · 관리자 대시보드 · 모니터링까지 6단계로
+          진행합니다.
+        </p>
+        <ol class="agenda">
+          <li>
+            <a href="#diagram"
+              ><small>STEP 1</small><b>데모 환경 구성도</b
+              ><span>OpenStack + GPUaaS + CMP 아키텍처 · 네트워크</span></a
+            >
+          </li>
+          <li>
+            <a href="#step2"
+              ><small>STEP 2</small><b>CMP 설명</b
+              ><span>클라우드 관리 포털 시연</span></a
+            >
+          </li>
+          <li>
+            <a href="#step3"
+              ><small>STEP 3</small><b>VM 접속 후 초기 실행</b
+              ><span>DNS · 패키지 · NVIDIA GPU 드라이버</span></a
+            >
+          </li>
+          <li>
+            <a href="#step4"
+              ><small>STEP 4</small><b>OpenStack 관리자 대시보드</b
+              ><span>Horizon 포털 (개발 / MDC 센터)</span></a
+            >
+          </li>
+          <li>
+            <a href="#step5"
+              ><small>STEP 5</small><b>OpenStack 모니터링</b
+              ><span>Grafana · Prometheus 대시보드</span></a
+            >
+          </li>
+          <li>
+            <a href="#step6"
+              ><small>STEP 6</small><b>ELK 모니터링</b
+              ><span>Kibana 관리자 대시보드 (고객사)</span></a
+            >
+          </li>
+        </ol>
+      </div>
+    </section>
+
     <!-- DIAGRAM -->
     <section id="diagram">
       <div class="container">
-        <h2 class="section-title">시스템 <span>구성도</span></h2>
+        <h2 class="section-title">
+          <span class="step-tag">STEP 1</span>시스템 <span>구성도</span>
+        </h2>
         <p class="section-sub">
           Internet → 방화벽 → L2 스위치 → OpenStack 클러스터 → VM 네트워크 / FC
           SAN 스토리지
@@ -1196,6 +1408,212 @@
             <div class="route-step">Backend API<small>Monitoring API</small></div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- STEP 2. CMP -->
+    <section id="step2" style="background: var(--white)">
+      <div class="container">
+        <h2 class="section-title">
+          <span class="step-tag">STEP 2</span>CMP <span>설명</span>
+        </h2>
+        <p class="section-sub">
+          OpenStack · Kubernetes · GPUaaS 자원을 하나의 포털에서 신청 · 관리하는
+          Cloud Management Platform
+        </p>
+        <div class="info-card link-card">
+          <h3>CMP 포털</h3>
+          <dl class="kv">
+            <dt>URL</dt>
+            <dd>https://cmp.i-data.ai/</dd>
+            <dt>시연</dt>
+            <dd>포털 로그인 → 자원 신청(VM · GPU) → 프로젝트 / 사용량 확인</dd>
+          </dl>
+          <a
+            class="btn"
+            href="https://cmp.i-data.ai/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >CMP 포털 열기 ↗</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3. VM 초기 실행 -->
+    <section id="step3">
+      <div class="container">
+        <h2 class="section-title">
+          <span class="step-tag">STEP 3</span>VM 접속 후 <span>초기 실행</span>
+        </h2>
+        <p class="section-sub">
+          GPU VM에 SSH 접속한 뒤 네트워크 확인 → 필수 패키지 → NVIDIA 드라이버 설치
+          순서로 진행합니다.
+        </p>
+        <ol class="cmd-steps">
+          <li>
+            <h3>DNS 설정 및 외부 저장소 연결 확인</h3>
+            <p>네임서버를 지정하고 Ubuntu 저장소에 접속되는지 확인합니다.</p>
+            <div class="cmd">
+              <button class="copy-btn" type="button">복사</button>
+              <pre>echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+getent hosts archive.ubuntu.com
+ping -c 3 archive.ubuntu.com
+sudo apt update</pre>
+            </div>
+          </li>
+          <li>
+            <h3>GPU 장치 인식 확인</h3>
+            <p>VM에 GPU가 패스스루(PCI)로 붙어 있는지 확인합니다.</p>
+            <div class="cmd">
+              <button class="copy-btn" type="button">복사</button>
+              <pre>lspci -nn | grep -Ei 'NVIDIA|AMD|3D controller'</pre>
+            </div>
+          </li>
+          <li>
+            <h3>패키지 업데이트 및 필수 도구 설치</h3>
+            <p>드라이버 빌드에 필요한 커널 헤더 · 빌드 도구를 설치합니다.</p>
+            <div class="cmd">
+              <button class="copy-btn" type="button">복사</button>
+              <pre>sudo apt update
+sudo apt install -y pciutils ubuntu-drivers-common build-essential dkms linux-headers-$(uname -r)</pre>
+            </div>
+          </li>
+          <li>
+            <h3>NVIDIA GPU 드라이버 설치</h3>
+            <p>오픈 커널 모듈 드라이버를 설치한 뒤 VM을 재부팅합니다.</p>
+            <div class="cmd">
+              <button class="copy-btn" type="button">복사</button>
+              <pre>sudo apt install -y nvidia-driver-595-open
+sudo reboot</pre>
+            </div>
+          </li>
+          <li>
+            <h3>재부팅 후 GPU 동작 확인</h3>
+            <p>드라이버 로드 상태와 GPU 목록을 확인합니다.</p>
+            <div class="cmd">
+              <button class="copy-btn" type="button">복사</button>
+              <pre>nvidia-smi
+nvidia-smi -L</pre>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- STEP 4. Horizon -->
+    <section id="step4" style="background: var(--white)">
+      <div class="container">
+        <h2 class="section-title">
+          <span class="step-tag">STEP 4</span>OpenStack 관리자 대시보드
+          <span>(Horizon)</span>
+        </h2>
+        <p class="section-sub">
+          프로젝트 · 인스턴스 · 네트워크 · 볼륨 · GPU Flavor를 관리하는 Horizon 포털
+        </p>
+        <div class="link-grid">
+          <div class="info-card link-card">
+            <h3>14층 개발서버</h3>
+            <dl class="kv">
+              <dt>URL</dt>
+              <dd>http://x.x.x.215</dd>
+              <dt>계정</dt>
+              <dd>admin / ●●●●●● (별도 전달)</dd>
+            </dl>
+          </div>
+          <div class="info-card link-card">
+            <h3>MDC 센터 서버</h3>
+            <dl class="kv">
+              <dt>URL</dt>
+              <dd>http://x.x.x.228</dd>
+              <dt>계정</dt>
+              <dd>admin / ●●●●●● (별도 전달)</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 5. Grafana -->
+    <section id="step5">
+      <div class="container">
+        <h2 class="section-title">
+          <span class="step-tag">STEP 5</span>OpenStack 관리자
+          <span>모니터링</span>
+        </h2>
+        <p class="section-sub">
+          Prometheus 수집 → Grafana 대시보드 「MDC AI Platform · OpenStack Kolla
+          2024.1」 (최근 15분, 5초 자동 새로고침)
+        </p>
+        <div class="link-grid">
+          <div class="info-card link-card">
+            <h3>14층 개발서버</h3>
+            <dl class="kv">
+              <dt>URL</dt>
+              <dd>http://x.x.x.215:3000</dd>
+              <dt>대시보드</dt>
+              <dd>/d/addlh2b/mdc-ai-platform-openstack-kolla-2024-1</dd>
+              <dt>계정</dt>
+              <dd>admin / ●●●●●● (별도 전달)</dd>
+            </dl>
+          </div>
+          <div class="info-card link-card">
+            <h3>
+              MDC 센터 서버<span class="badge-warn">VPN 필요</span>
+            </h3>
+            <dl class="kv">
+              <dt>VPN</dt>
+              <dd>https://x.x.x.227:8002 에서 먼저 인증 (계정 별도 전달)</dd>
+              <dt>URL</dt>
+              <dd>http://192.168.10.99:3000</dd>
+              <dt>대시보드</dt>
+              <dd>/d/addlh2b/mdc-ai-platform-openstack-kolla-2024-1</dd>
+              <dt>계정</dt>
+              <dd>admin / ●●●●●● (별도 전달)</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 6. ELK -->
+    <section id="step6" style="background: var(--white)">
+      <div class="container">
+        <h2 class="section-title">
+          <span class="step-tag">STEP 6</span>ELK 모니터링
+          <span>(관리자 대시보드)</span>
+        </h2>
+        <p class="section-sub">
+          고객사 서비스 로그를 Elasticsearch로 수집하고 Kibana 대시보드로 시각화
+        </p>
+        <div class="link-grid">
+          <div class="info-card link-card">
+            <h3>경남진로교육원</h3>
+            <dl class="kv">
+              <dt>URL</dt>
+              <dd>http://x.x.x.58:5601</dd>
+              <dt>화면</dt>
+              <dd>Kibana › Dashboards (최근 15분)</dd>
+              <dt>계정</dt>
+              <dd>elastic / ●●●●●● (별도 전달)</dd>
+            </dl>
+          </div>
+          <div class="info-card link-card">
+            <h3>충북체인지플랫폼</h3>
+            <dl class="kv">
+              <dt>URL</dt>
+              <dd>http://x.x.x.254:5601</dd>
+              <dt>화면</dt>
+              <dd>Kibana › Dashboards (최근 15분)</dd>
+              <dt>계정</dt>
+              <dd>elastic / ●●●●●● (별도 전달)</dd>
+            </dl>
+          </div>
+        </div>
+        <p class="note">
+          ※ 공개 페이지이므로 공인 IP는 일부 마스킹, 계정 비밀번호는 표기하지
+          않습니다.
+        </p>
 
         <a href="index.html#projects" class="back-link">← 프로젝트 목록으로</a>
       </div>
@@ -1204,5 +1622,25 @@
     <footer>
       <p>© 2026 이태운 · Cloud Transformation Architect · 24년 경력</p>
     </footer>
+
+    <script>
+      // STEP 3 명령어 복사 버튼
+      document.querySelectorAll(".copy-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var text = btn.parentElement.querySelector("pre").innerText;
+          navigator.clipboard.writeText(text).then(
+            function () {
+              btn.textContent = "복사됨 ✓";
+              setTimeout(function () {
+                btn.textContent = "복사";
+              }, 1500);
+            },
+            function () {
+              btn.textContent = "복사 실패";
+            }
+          );
+        });
+      });
+    </script>
   </body>
 </html>

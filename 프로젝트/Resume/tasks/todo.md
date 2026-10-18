@@ -32,6 +32,20 @@
 - [x] 3. `portfolio.html`을 `index.html`과 동기화
 - [x] 4. 브라우저로 열어 확인 → `progress.md` 기록
 
+### 설명회 섹션 추가 (2026-10-18)
+
+참고: `참고자료/설명회 매뉴구성.txt` (6개 항목) — 사용자 결정: 새 파일 대신 `mdc-openstack.html` 안에 추가, 공인 IP 마스킹
+
+- [x] 0. `mdc-openstack.html.bak` 백업
+- [x] 1. 상단에 "설명회 순서" 목차(STEP 1~6) 섹션 추가 — STEP 1 = 기존 구성도 섹션(#diagram)
+- [x] 2. 기존 섹션 뒤에 STEP 2~6 섹션 추가 (같은 톤앤매너)
+  - STEP 2 CMP 설명 → https://cmp.i-data.ai/ 링크
+  - STEP 3 VM 초기 실행 → 명령어 블록 + 복사 버튼
+  - STEP 4 Horizon / STEP 5 Grafana(MDC는 VPN 필요) / STEP 6 ELK
+  - 🔒 비밀번호·VPN 계정 미표기, 공인 IP는 `x.x.x.215` 형태
+- [x] 3. 상단 메뉴에 "설명회" 링크 추가
+- [x] 4. Edge 헤드리스로 데스크톱/모바일 확인 → `progress.md` 기록
+
 ---
 
 ## 완료
