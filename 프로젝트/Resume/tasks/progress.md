@@ -25,3 +25,4 @@
   - `index.html` 프로젝트 하위 메뉴에 "MDC-OpenStack-AI-Platform" 추가, `portfolio.html` 동기화
   - Edge 헤드리스로 데스크톱/모바일 화면 확인
 - [수정] Ingress LB 공인 IP를 x.x.x.220으로 변경 (기존 .215=VIP, .218=CPU VM 01과 중복되던 문제 해소)
+- [수정] `vercel.json` builds src를 `index.html` → `*.html`로 변경 (mdc-openstack.html·portfolio.html 404 해결)
