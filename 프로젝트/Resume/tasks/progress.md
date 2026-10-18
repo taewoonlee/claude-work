@@ -40,3 +40,8 @@
   - 가로 화살표: 점이 좌→우 이동 / 가로 막대(VIP·OVN·VM Network): 빛이 훑고 지나감
   - 움직임 줄이기(prefers-reduced-motion) 설정 시 애니메이션 끔
   - Edge 헤드리스로 시점 2개 캡처해 움직임 확인, 모바일 가로 넘침 없음 확인
+- [수정] 패킷 흐름을 무한 반복 → 트래픽 순서대로 1회 재생 (사용자 피드백: 계속 흘러서 눈이 피곤함)
+  - 백업: `mdc-openstack.before-sequence.html.bak`
+  - Internet → FW → L2 → VIP → Controller/GPU → OVN → VM Network → VM (약 6.4초), SAN A→B→Storage 동시 진행
+  - 구성도·서비스 라우팅이 화면에 보일 때 시작(IntersectionObserver), "▶ 패킷 흐름 다시 보기" 버튼 추가
+  - 애니메이션을 특정 시점(1.3/2.7/4.7초)에 멈춰 캡처해 순서 확인, 9초 후 정지 확인

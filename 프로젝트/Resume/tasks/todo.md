@@ -56,6 +56,16 @@
 - [x] 4. "움직임 줄이기" 설정한 사용자는 애니메이션 끔 (접근성)
 - [x] 5. HTML 구조는 그대로, CSS만 추가 → 데스크톱/모바일 확인 → progress.md 기록
 
+### 패킷 흐름을 순차 1회 재생으로 변경 (2026-10-18)
+
+- [x] 0. `mdc-openstack.before-sequence.html.bak` 백업
+- [x] 1. 무한 반복(infinite) 제거 → 각 연결선은 딱 한 번만 재생
+- [x] 2. 실제 트래픽 순서대로 시간차 재생 (약 6초)
+  - Internet → FW → L2 Switch → VIP(빛) → Controller/GPU → OVN(빛) → VM Network(빛) → 각 VM
+  - FC SAN: Switch A → B → Storage 도 같은 흐름 중간에 한 번
+- [x] 3. 구성도가 화면에 보일 때 시작 (스크롤해서 도착했을 때), 서비스 라우팅 화살표도 같은 방식
+- [x] 4. 확인 → progress.md 기록
+
 ---
 
 ## 완료

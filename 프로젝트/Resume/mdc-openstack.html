@@ -346,7 +346,9 @@
         margin-left: 0.4rem;
       }
 
-      /* ── 패킷 흐름 애니메이션 ── */
+      /* ── 패킷 흐름 애니메이션 ──
+         구성도가 화면에 보이면(.play) 실제 트래픽 순서대로 한 번만 재생.
+         --d = 각 연결선의 출발 시각 */
       .vline {
         position: relative;
         color: var(--net-public);
@@ -357,7 +359,6 @@
       .vline.san {
         color: var(--net-san);
       }
-      /* 세로선 위를 위→아래로 이동하는 패킷 */
       .vline::after,
       .arrow::after {
         content: "";
@@ -372,8 +373,43 @@
       }
       .vline::after {
         left: 50%;
+        top: -3px;
         margin-left: -3px;
-        animation: pkt-down 1.6s linear infinite;
+      }
+      .arrow {
+        position: relative;
+        display: inline-block;
+      }
+      .arrow::after {
+        top: 50%;
+        left: -4px;
+        margin-top: -3px;
+      }
+      .bus {
+        position: relative;
+        overflow: hidden;
+      }
+      .bus::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.14),
+          transparent
+        );
+        transform: translateX(-100%);
+        pointer-events: none;
+      }
+      .play .vline::after {
+        animation: pkt-down 0.6s linear var(--d, 0s) 1;
+      }
+      .play .arrow::after {
+        animation: pkt-right 0.5s linear var(--d, 0s) 1;
+      }
+      .play .bus::after {
+        animation: bus-sweep 0.8s ease-in-out var(--d, 0s) 1;
       }
       @keyframes pkt-down {
         0% {
@@ -389,26 +425,6 @@
           opacity: 0;
         }
       }
-      /* 나란한 선은 출발 시간을 엇갈리게 */
-      .connectors .vline:nth-child(2)::after {
-        animation-delay: 0.4s;
-      }
-      .connectors .vline:nth-child(3)::after {
-        animation-delay: 0.8s;
-      }
-      .connectors .vline:nth-child(4)::after {
-        animation-delay: 1.2s;
-      }
-      /* 가로 화살표 위를 왼쪽→오른쪽으로 이동하는 패킷 (모바일은 화살표 회전으로 세로) */
-      .arrow {
-        position: relative;
-        display: inline-block;
-      }
-      .arrow::after {
-        top: 50%;
-        margin-top: -3px;
-        animation: pkt-right 1.2s linear infinite;
-      }
       @keyframes pkt-right {
         0% {
           left: -4px;
@@ -423,35 +439,52 @@
           opacity: 0;
         }
       }
-      /* 가로 막대: 빛이 좌→우로 훑고 지나감 */
-      .bus {
-        position: relative;
-        overflow: hidden;
-      }
-      .bus::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 255, 255, 0.12),
-          transparent
-        );
-        transform: translateX(-100%);
-        animation: bus-sweep 3s ease-in-out infinite;
-        pointer-events: none;
-      }
       @keyframes bus-sweep {
         to {
           transform: translateX(100%);
         }
       }
+      /* 재생 순서: Internet → FW → L2 → VIP → Controller/GPU → OVN → VM Network → VM */
+      .edge-row > .arrow:nth-of-type(1) { --d: 0s; }
+      .edge-row > .arrow:nth-of-type(2) { --d: 0.5s; }
+      .edge-row + .vline { --d: 1s; }
+      .bus.pub { --d: 1.6s; }
+      .bus.pub + .connectors .vline { --d: 2.4s; }
+      .ctrl-grid + .connectors .vline { --d: 3s; }
+      .bus.ovn { --d: 3.6s; }
+      .bus.ovn + .vline { --d: 4.4s; }
+      .bus.int { --d: 5s; }
+      .bus.int + .connectors .vline { --d: 5.8s; }
+      /* FC SAN: Switch A → B → Storage (클러스터 흐름과 함께) */
+      .panel.san > .vline:nth-child(3) { --d: 2.4s; }
+      .panel.san > .vline:nth-child(5) { --d: 3s; }
+      /* 서비스 라우팅 */
+      .route-chain > .arrow:nth-of-type(2) { --d: 0.5s; }
+      .route-chain > .arrow:nth-of-type(3) { --d: 1s; }
+      .route-chain > .arrow:nth-of-type(4) { --d: 1.5s; }
+      .replay-btn {
+        background: transparent;
+        color: #2dd4bf;
+        border: 1px solid rgba(13, 148, 136, 0.6);
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.35rem 1rem;
+        margin: -1rem 0 1.5rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .replay-btn:hover {
+        background: var(--teal-light);
+      }
       @media (prefers-reduced-motion: reduce) {
         .vline::after,
         .arrow::after,
         .bus::after {
-          animation: none;
+          animation: none !important;
+          display: none;
+        }
+        .replay-btn {
           display: none;
         }
       }
@@ -1184,6 +1217,9 @@
           Internet → 방화벽 → L2 스위치 → OpenStack 클러스터 → VM 네트워크 / FC
           SAN 스토리지
         </p>
+        <button class="replay-btn" type="button" id="replay-packets">
+          ▶ 패킷 흐름 다시 보기
+        </button>
 
         <!-- 1. 엣지 -->
         <div class="edge-row">
@@ -1734,6 +1770,40 @@ nvidia-smi -L</pre>
     </footer>
 
     <script>
+      // STEP 1 패킷 흐름: 구성도 · 서비스 라우팅이 화면에 보이면 한 번만 재생
+      var flowSections = document.querySelectorAll("#diagram, #access");
+      function playFlow(section) {
+        section.classList.remove("play");
+        void section.offsetWidth; // 애니메이션 재시작을 위해 강제 리플로우
+        section.classList.add("play");
+      }
+      if ("IntersectionObserver" in window) {
+        var flowObserver = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                playFlow(entry.target.closest("section"));
+                flowObserver.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.6 }
+        );
+        // 섹션 전체가 아니라 흐름 시작 지점이 보일 때 시작
+        document
+          .querySelectorAll("#diagram .edge-row, #access .route-chain")
+          .forEach(function (el) {
+            flowObserver.observe(el);
+          });
+      } else {
+        flowSections.forEach(playFlow);
+      }
+      document
+        .getElementById("replay-packets")
+        .addEventListener("click", function () {
+          flowSections.forEach(playFlow);
+        });
+
       // STEP 3 명령어 복사 버튼
       document.querySelectorAll(".copy-btn").forEach(function (btn) {
         btn.addEventListener("click", function () {
