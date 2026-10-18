@@ -1,0 +1,1208 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MDC OpenStack AI Platform — 구성도</title>
+    <style>
+      :root {
+        --teal: #0d9488;
+        --teal-dark: #0f766e;
+        --teal-light: rgba(13, 148, 136, 0.15);
+        --gray-50: #0f172a;
+        --gray-100: #1e293b;
+        --gray-200: #2d3748;
+        --gray-500: #94a3b8;
+        --gray-700: #cbd5e1;
+        --gray-900: #f1f5f9;
+        --white: #1e293b;
+        /* 구성도 네트워크 색상 (범례와 동일) */
+        --net-internal: #4ade80;
+        --net-public: #60a5fa;
+        --net-san: #f87171;
+        --gpu: #a3e635;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", "Apple SD Gothic Neo", sans-serif;
+        color: var(--gray-700);
+        background: var(--gray-50);
+        line-height: 1.6;
+      }
+
+      /* ── NAV (메인과 동일) ── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--gray-200);
+        z-index: 100;
+        padding: 0 2rem;
+      }
+      nav ul {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 1rem 0;
+      }
+      nav a {
+        text-decoration: none;
+        color: var(--gray-500);
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      nav a:hover,
+      nav a[aria-current="page"] {
+        color: var(--teal);
+      }
+      nav li.has-sub {
+        position: relative;
+      }
+      nav li.has-sub > a::after {
+        content: " ▾";
+        font-size: 0.7rem;
+      }
+      nav ul.submenu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: -1rem;
+        flex-direction: column;
+        gap: 0;
+        min-width: 160px;
+        margin: 0;
+        padding: 0.5rem 0;
+        background: rgba(15, 23, 42, 0.98);
+        border: 1px solid var(--gray-200);
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      }
+      nav li.has-sub::before {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        height: 1rem;
+      }
+      nav li.has-sub:hover > ul.submenu,
+      nav li.has-sub:focus-within > ul.submenu {
+        display: flex;
+      }
+      nav ul.submenu a {
+        display: block;
+        padding: 0.5rem 1rem;
+        white-space: nowrap;
+      }
+
+      /* ── HEADER ── */
+      #hero {
+        background:
+          radial-gradient(
+            ellipse at 60% 40%,
+            rgba(13, 148, 136, 0.18) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse at 20% 80%,
+            rgba(15, 118, 110, 0.12) 0%,
+            transparent 50%
+          ),
+          linear-gradient(160deg, #0d1b2a 0%, #0f172a 50%, #0d1f1e 100%);
+        padding: 8rem 2rem 4rem;
+        text-align: center;
+        border-bottom: 1px solid #2d3748;
+      }
+      .hero-badge {
+        display: inline-block;
+        background: rgba(13, 148, 136, 0.18);
+        border: 1px solid rgba(13, 148, 136, 0.4);
+        color: #2dd4bf;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        padding: 0.3rem 1rem;
+        border-radius: 999px;
+        margin-bottom: 1.25rem;
+        text-transform: uppercase;
+      }
+      .hero-title {
+        font-size: clamp(1.6rem, 4vw, 2.5rem);
+        font-weight: 800;
+        color: #f1f5f9;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.75rem;
+      }
+      .hero-title span {
+        color: var(--teal);
+      }
+      .hero-desc {
+        font-size: 0.95rem;
+        color: #64748b;
+        max-width: 620px;
+        margin: 0 auto 2rem;
+        line-height: 1.8;
+      }
+      .stat-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+      }
+      .stat {
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid var(--gray-200);
+        border-radius: 12px;
+        padding: 0.75rem 1.25rem;
+        min-width: 130px;
+      }
+      .stat b {
+        display: block;
+        font-size: 1.25rem;
+        color: var(--gray-900);
+      }
+      .stat small {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+      }
+
+      /* ── SECTION BASE ── */
+      section {
+        padding: 4rem 2rem;
+      }
+      .container {
+        max-width: 1120px;
+        margin: 0 auto;
+      }
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--gray-900);
+        margin-bottom: 0.5rem;
+      }
+      .section-title span {
+        color: var(--teal);
+      }
+      .section-sub {
+        font-size: 0.9rem;
+        color: var(--gray-500);
+        margin-bottom: 2rem;
+      }
+
+      /* ── DIAGRAM 공통 ── */
+      .panel {
+        border: 1px dashed rgba(13, 148, 136, 0.5);
+        border-radius: 16px;
+        padding: 1.25rem;
+        background: rgba(13, 148, 136, 0.04);
+      }
+      .panel-label {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #2dd4bf;
+        letter-spacing: 0.03em;
+        margin-bottom: 1rem;
+      }
+      .node {
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: 12px;
+        padding: 1rem;
+        transition:
+          box-shadow 0.25s,
+          transform 0.25s;
+      }
+      .node:hover {
+        box-shadow: 0 8px 32px rgba(13, 148, 136, 0.12);
+        transform: translateY(-2px);
+      }
+      .node-head {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 0.5rem;
+      }
+      .node-head svg {
+        width: 22px;
+        height: 22px;
+        flex-shrink: 0;
+        color: var(--teal);
+      }
+      .node-name {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        line-height: 1.3;
+      }
+      .node-host {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+      }
+      .ip {
+        display: inline-block;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 0.75rem;
+        padding: 0.1rem 0.5rem;
+        border-radius: 6px;
+        margin: 0.15rem 0.25rem 0.15rem 0;
+      }
+      .ip.pub {
+        color: var(--net-public);
+        background: rgba(96, 165, 250, 0.12);
+      }
+      .ip.int {
+        color: var(--net-internal);
+        background: rgba(74, 222, 128, 0.12);
+      }
+      .node ul {
+        list-style: none;
+        margin-top: 0.6rem;
+        display: grid;
+        gap: 0.2rem;
+      }
+      .node li {
+        font-size: 0.78rem;
+        color: var(--gray-500);
+        display: flex;
+        gap: 0.4rem;
+      }
+      .node li::before {
+        content: "·";
+        color: var(--teal);
+        font-weight: 700;
+      }
+      .node.gpu {
+        border-color: rgba(163, 230, 53, 0.35);
+      }
+      .node.gpu .node-head svg {
+        color: var(--gpu);
+      }
+      .gpu-chip {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #0f172a;
+        background: var(--gpu);
+        padding: 0.1rem 0.55rem;
+        border-radius: 999px;
+        margin-top: 0.35rem;
+      }
+
+      /* 세로 연결선 */
+      .vline {
+        width: 2px;
+        height: 22px;
+        margin: 0 auto;
+        background: var(--net-public);
+      }
+      .vline.int {
+        background: var(--net-internal);
+      }
+
+      /* 가로 버스(막대) */
+      .bus {
+        border-radius: 10px;
+        padding: 0.6rem 1rem;
+        text-align: center;
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+      .bus.pub {
+        color: var(--net-public);
+        background: rgba(96, 165, 250, 0.08);
+        border: 1px solid rgba(96, 165, 250, 0.45);
+      }
+      .bus.ovn {
+        color: #bae6fd;
+        background: linear-gradient(
+          90deg,
+          rgba(14, 116, 144, 0.35),
+          rgba(13, 148, 136, 0.35)
+        );
+        border: 1px solid rgba(45, 212, 191, 0.45);
+        padding: 0.85rem 1rem;
+      }
+      .bus.int {
+        color: var(--net-internal);
+        background: rgba(74, 222, 128, 0.07);
+        border: 1px solid rgba(74, 222, 128, 0.4);
+      }
+      .bus small {
+        font-weight: 400;
+        color: var(--gray-500);
+        margin-left: 0.4rem;
+      }
+
+      /* ── 1. 엣지 (Internet → FW → Switch) ── */
+      .edge-row {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr auto 1fr;
+        align-items: center;
+        gap: 0.75rem;
+        max-width: 760px;
+        margin: 0 auto;
+      }
+      .edge {
+        text-align: center;
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: 12px;
+        padding: 0.85rem 0.5rem;
+      }
+      .edge svg {
+        width: 28px;
+        height: 28px;
+        color: var(--teal);
+        margin-bottom: 0.25rem;
+      }
+      .edge.fw svg {
+        color: #fb923c;
+      }
+      .edge .node-name {
+        font-size: 0.85rem;
+      }
+      .arrow {
+        color: var(--net-public);
+        font-size: 1.25rem;
+        line-height: 1;
+      }
+
+      /* ── 2. 메인 그리드 (Cluster | SAN) ── */
+      .main-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 260px;
+        gap: 1.25rem;
+        align-items: stretch;
+      }
+      .ctrl-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.85rem;
+      }
+      .vm-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.75rem;
+      }
+      .vm-grid .node {
+        padding: 0.85rem;
+      }
+      .vm-role {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+        margin-top: 0.35rem;
+        line-height: 1.45;
+      }
+      .node.vm-gpu {
+        border-color: rgba(163, 230, 53, 0.35);
+      }
+      .node.vm-gpu .node-head svg {
+        color: var(--gpu);
+      }
+      .node.vm-lb .node-head svg {
+        color: #fbbf24;
+      }
+      .connectors {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      /* SAN */
+      .panel.san {
+        border-color: rgba(248, 113, 113, 0.55);
+        background: rgba(248, 113, 113, 0.04);
+        display: flex;
+        flex-direction: column;
+      }
+      .panel.san .panel-label {
+        color: var(--net-san);
+      }
+      .san-sw {
+        background: var(--white);
+        border: 1px solid rgba(248, 113, 113, 0.4);
+        border-radius: 10px;
+        padding: 0.6rem 0.8rem;
+        text-align: center;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--gray-900);
+      }
+      .san-sw small {
+        display: block;
+        font-weight: 400;
+        font-size: 0.72rem;
+        color: var(--gray-500);
+      }
+      .vline.san {
+        background: var(--net-san);
+      }
+      .san-store {
+        text-align: center;
+        background: var(--white);
+        border: 1px solid rgba(248, 113, 113, 0.4);
+        border-radius: 12px;
+        padding: 1rem 0.75rem;
+      }
+      .san-store svg {
+        width: 40px;
+        height: 40px;
+        color: var(--net-san);
+      }
+      .san-link {
+        margin-top: 0.6rem;
+        font-size: 0.72rem;
+        color: var(--net-san);
+        font-weight: 600;
+      }
+      .san ul {
+        list-style: none;
+        margin-top: 1rem;
+        display: grid;
+        gap: 0.3rem;
+        text-align: left;
+      }
+      .san li {
+        font-size: 0.78rem;
+        color: var(--gray-500);
+        display: flex;
+        gap: 0.4rem;
+      }
+      .san li::before {
+        content: "·";
+        color: var(--net-san);
+        font-weight: 700;
+      }
+
+      /* ── 3. 정보 카드 ── */
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.25rem;
+      }
+      .info-card {
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: 16px;
+        padding: 1.5rem;
+      }
+      .info-card h3 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        margin-bottom: 0.9rem;
+      }
+      .kv {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.35rem 0.9rem;
+        font-size: 0.8rem;
+      }
+      .kv dt {
+        font-family: Consolas, "Courier New", monospace;
+        color: var(--net-public);
+      }
+      .kv dd {
+        color: var(--gray-500);
+      }
+      .kv hr {
+        grid-column: 1 / -1;
+        border: 0;
+        border-top: 1px solid var(--gray-200);
+        margin: 0.3rem 0;
+      }
+      .net-block + .net-block {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--gray-200);
+      }
+      .net-block b {
+        display: block;
+        font-size: 0.82rem;
+        color: var(--gray-900);
+        margin-bottom: 0.25rem;
+      }
+      .legend {
+        list-style: none;
+        display: grid;
+        gap: 0.6rem;
+      }
+      .legend li {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.82rem;
+        color: var(--gray-500);
+      }
+      .legend i {
+        display: inline-block;
+        width: 28px;
+        height: 3px;
+        border-radius: 2px;
+        position: relative;
+      }
+      .legend i::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        border: 2px solid currentColor;
+        background: var(--white);
+        transform: translate(-50%, -50%);
+      }
+      .feature-list {
+        list-style: none;
+        display: grid;
+        gap: 0.45rem;
+      }
+      .feature-list li {
+        font-size: 0.85rem;
+        color: var(--gray-500);
+        display: flex;
+        gap: 0.5rem;
+      }
+      .feature-list li::before {
+        content: "✓";
+        color: var(--teal);
+        font-weight: 700;
+      }
+
+      /* ── 4. 접속 흐름 / 서비스 라우팅 ── */
+      .flow {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 1.25rem;
+        align-items: center;
+      }
+      .actor {
+        text-align: center;
+        color: var(--gray-900);
+        font-size: 0.85rem;
+        font-weight: 700;
+      }
+      .actor svg {
+        width: 42px;
+        height: 42px;
+        color: var(--teal);
+        display: block;
+        margin: 0 auto 0.25rem;
+      }
+      .fip-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.85rem;
+      }
+      .fip {
+        background: var(--white);
+        border: 1px dashed rgba(96, 165, 250, 0.5);
+        border-radius: 12px;
+        padding: 0.85rem 1rem;
+      }
+      .fip small {
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: var(--net-public);
+        text-transform: uppercase;
+      }
+      .fip b {
+        display: block;
+        color: var(--gray-900);
+        font-size: 0.9rem;
+        margin: 0.2rem 0;
+      }
+      .fip span {
+        font-size: 0.78rem;
+        color: var(--gray-500);
+      }
+      .route {
+        margin-top: 1.5rem;
+      }
+      .route-chain {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .route-step {
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: 10px;
+        padding: 0.6rem 0.9rem;
+        font-size: 0.8rem;
+        color: var(--gray-900);
+        font-weight: 600;
+        text-align: center;
+        line-height: 1.35;
+      }
+      .route-step small {
+        display: block;
+        font-weight: 400;
+        color: var(--gray-500);
+        font-size: 0.72rem;
+      }
+      .route-step.first {
+        border-color: rgba(13, 148, 136, 0.6);
+        background: var(--teal-light);
+      }
+      .route-chain .arrow {
+        color: var(--teal);
+      }
+
+      .note {
+        margin-top: 1.25rem;
+        font-size: 0.75rem;
+        color: #64748b;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-top: 2.5rem;
+        background: var(--teal);
+        color: #fff;
+        padding: 0.65rem 1.75rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 20px rgba(13, 148, 136, 0.35);
+        transition:
+          transform 0.2s,
+          background 0.2s;
+      }
+      .back-link:hover {
+        transform: translateY(-2px);
+        background: var(--teal-dark);
+      }
+
+      footer {
+        background: #020617;
+        color: var(--gray-500);
+        text-align: center;
+        padding: 1.5rem 2rem;
+        font-size: 0.8rem;
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 960px) {
+        .main-grid {
+          grid-template-columns: 1fr;
+        }
+        .ctrl-grid,
+        .vm-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .connectors {
+          display: none;
+        }
+      }
+      @media (max-width: 640px) {
+        nav {
+          padding: 0 1rem;
+        }
+        nav ul {
+          gap: 1rem;
+        }
+        section {
+          padding: 3rem 1rem;
+        }
+        #hero {
+          padding: 6.5rem 1rem 3rem;
+        }
+        .edge-row {
+          grid-template-columns: 1fr;
+        }
+        .edge-row .arrow {
+          transform: rotate(90deg);
+          text-align: center;
+        }
+        .ctrl-grid,
+        .vm-grid,
+        .fip-grid {
+          grid-template-columns: 1fr;
+        }
+        .flow {
+          grid-template-columns: 1fr;
+        }
+        .route-chain {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .route-chain .arrow {
+          transform: rotate(90deg);
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 아이콘 정의 -->
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <symbol id="i-server" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <rect x="3" y="3" width="18" height="7" rx="1.5" />
+        <rect x="3" y="14" width="18" height="7" rx="1.5" />
+        <path d="M7 6.5h.01M7 17.5h.01M11 6.5h6M11 17.5h6" />
+      </symbol>
+      <symbol id="i-gpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <rect x="5" y="5" width="14" height="14" rx="2" />
+        <rect x="9" y="9" width="6" height="6" rx="1" />
+        <path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3" />
+      </symbol>
+      <symbol id="i-k8s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <path d="M12 2.5l8.5 4.1 2.1 9.2-5.9 7.4H7.3l-5.9-7.4 2.1-9.2z" />
+        <circle cx="12" cy="12" r="3" />
+        <path d="M12 6v3M12 15v3M6.5 9.5l2.7 1.4M14.8 13.1l2.7 1.4M6.5 14.5l2.7-1.4M14.8 10.9l2.7-1.4" />
+      </symbol>
+      <symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 18a5 5 0 0 1-.5-9.97A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9z" />
+      </symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+        <path d="M12 2.5l8 3v6c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10v-6z" />
+        <path d="M8.5 12l2.5 2.5 4.5-5" stroke-linecap="round" />
+      </symbol>
+      <symbol id="i-switch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <rect x="2" y="7" width="20" height="10" rx="2" />
+        <path d="M6 12h.01M9.5 12h.01M13 12h.01M16.5 12h.01" />
+      </symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <rect x="4" y="10" width="16" height="11" rx="2" />
+        <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+      </symbol>
+      <symbol id="i-portal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <rect x="3" y="4" width="18" height="14" rx="2" />
+        <path d="M3 8h18M8 21h8M12 18v3" />
+      </symbol>
+      <symbol id="i-lb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <rect x="9" y="2.5" width="6" height="5" rx="1" />
+        <rect x="2.5" y="16.5" width="6" height="5" rx="1" />
+        <rect x="15.5" y="16.5" width="6" height="5" rx="1" />
+        <path d="M12 7.5v4M5.5 16.5v-5h13v5" />
+      </symbol>
+      <symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <ellipse cx="12" cy="5" rx="8" ry="2.8" />
+        <path d="M4 5v14c0 1.5 3.6 2.8 8 2.8s8-1.3 8-2.8V5M4 12c0 1.5 3.6 2.8 8 2.8s8-1.3 8-2.8" />
+      </symbol>
+      <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <circle cx="9" cy="8" r="3.5" />
+        <path d="M2.5 20c.6-3.6 3.3-5.5 6.5-5.5s5.9 1.9 6.5 5.5" />
+        <circle cx="17" cy="9" r="2.8" />
+        <path d="M17 14.3c2.4.2 4 1.8 4.5 4.7" />
+      </symbol>
+    </svg>
+
+    <!-- NAV -->
+    <nav>
+      <ul>
+        <li><a href="index.html#hero">홈</a></li>
+        <li><a href="index.html#career">경력</a></li>
+        <li class="has-sub">
+          <a href="index.html#projects">프로젝트</a>
+          <ul class="submenu">
+            <li>
+              <a
+                href="https://aiosec.makenet.co.kr/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >SORA 프로젝트</a
+              >
+            </li>
+            <li>
+              <a href="mdc-openstack.html" aria-current="page"
+                >MDC-OpenStack-AI-Platform</a
+              >
+            </li>
+          </ul>
+        </li>
+        <li><a href="index.html#skills">스킬</a></li>
+        <li><a href="index.html#certs">자격증</a></li>
+        <li><a href="index.html#guestbook">방명록</a></li>
+        <li><a href="index.html#contact">연락처</a></li>
+      </ul>
+    </nav>
+
+    <!-- HEADER -->
+    <header id="hero">
+      <span class="hero-badge">MDC · AI Platform · Architecture</span>
+      <h1 class="hero-title">
+        OpenStack + <span>GPUaaS</span> + CMP<br />데모 환경 구성도
+      </h1>
+      <p class="hero-desc">
+        Kolla-Ansible 기반 OpenStack HA 클러스터 위에 NVIDIA H200 GPU 컴퓨트,
+        FC SAN 스토리지, Kubernetes 기반 AI 플랫폼과 CMP 포털을 통합한 MDC 개발
+        서버 아키텍처입니다.
+      </p>
+      <div class="stat-row">
+        <div class="stat"><b>3</b><small>Controller (HA)</small></div>
+        <div class="stat"><b>H200 × 4</b><small>GPU Compute</small></div>
+        <div class="stat"><b>8</b><small>Service VMs</small></div>
+        <div class="stat"><b>A / B</b><small>FC SAN 이중화</small></div>
+      </div>
+    </header>
+
+    <!-- DIAGRAM -->
+    <section id="diagram">
+      <div class="container">
+        <h2 class="section-title">시스템 <span>구성도</span></h2>
+        <p class="section-sub">
+          Internet → 방화벽 → L2 스위치 → OpenStack 클러스터 → VM 네트워크 / FC
+          SAN 스토리지
+        </p>
+
+        <!-- 1. 엣지 -->
+        <div class="edge-row">
+          <div class="edge">
+            <svg><use href="#i-cloud" /></svg>
+            <div class="node-name">Internet</div>
+          </div>
+          <span class="arrow">→</span>
+          <div class="edge fw">
+            <svg><use href="#i-shield" /></svg>
+            <div class="node-name">Fortigate 60E</div>
+            <span class="ip pub">x.x.x.254</span>
+          </div>
+          <span class="arrow">→</span>
+          <div class="edge">
+            <svg><use href="#i-switch" /></svg>
+            <div class="node-name">L2 Switch</div>
+          </div>
+        </div>
+        <div class="vline"></div>
+
+        <!-- 2. 메인 -->
+        <div class="main-grid">
+          <div class="panel">
+            <div class="panel-label">OpenStack Cluster · Kolla-Ansible / OVN</div>
+
+            <div class="bus pub">VIP (HA)<small>x.x.x.215 · HAProxy / Keepalived</small></div>
+            <div class="connectors">
+              <div class="vline"></div>
+              <div class="vline"></div>
+              <div class="vline"></div>
+              <div class="vline"></div>
+            </div>
+
+            <div class="ctrl-grid">
+              <div class="node">
+                <div class="node-head">
+                  <svg><use href="#i-server" /></svg>
+                  <div>
+                    <div class="node-name">Controller 01</div>
+                    <div class="node-host">ctrl01</div>
+                  </div>
+                </div>
+                <span class="ip pub">x.x.x.211</span>
+                <ul>
+                  <li>HAProxy / Keepalived</li>
+                  <li>OpenStack API</li>
+                  <li>Keystone</li>
+                  <li>Nova / Neutron</li>
+                  <li>Horizon</li>
+                </ul>
+              </div>
+              <div class="node">
+                <div class="node-head">
+                  <svg><use href="#i-server" /></svg>
+                  <div>
+                    <div class="node-name">Controller 02</div>
+                    <div class="node-host">ctrl02</div>
+                  </div>
+                </div>
+                <span class="ip pub">x.x.x.212</span>
+                <ul>
+                  <li>HAProxy / Keepalived</li>
+                  <li>OpenStack API</li>
+                  <li>Keystone</li>
+                  <li>Nova / Neutron</li>
+                  <li>Horizon</li>
+                </ul>
+              </div>
+              <div class="node">
+                <div class="node-head">
+                  <svg><use href="#i-server" /></svg>
+                  <div>
+                    <div class="node-name">Controller 03</div>
+                    <div class="node-host">ctrl03</div>
+                  </div>
+                </div>
+                <span class="ip pub">x.x.x.213</span>
+                <ul>
+                  <li>HAProxy / Keepalived</li>
+                  <li>OpenStack API</li>
+                  <li>Keystone</li>
+                  <li>Nova / Neutron</li>
+                  <li>Horizon</li>
+                </ul>
+              </div>
+              <div class="node gpu">
+                <div class="node-head">
+                  <svg><use href="#i-gpu" /></svg>
+                  <div>
+                    <div class="node-name">GPU Compute Node</div>
+                    <div class="node-host">gpu01</div>
+                  </div>
+                </div>
+                <span class="ip pub">x.x.x.214</span><br />
+                <span class="gpu-chip">NVIDIA H200 × 4</span>
+                <ul>
+                  <li>Nova Compute</li>
+                  <li>NVIDIA Driver</li>
+                  <li>KVM / QEMU</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="connectors">
+              <div class="vline int"></div>
+              <div class="vline int"></div>
+              <div class="vline int"></div>
+              <div class="vline int"></div>
+            </div>
+            <div class="bus ovn">OVN (SDN) &nbsp;/&nbsp; OVS Bridge</div>
+            <div class="vline int"></div>
+            <div class="bus int">OpenStack VM Network<small>10.10.10.0/24</small></div>
+            <div class="connectors">
+              <div class="vline int"></div>
+              <div class="vline int"></div>
+              <div class="vline int"></div>
+              <div class="vline int"></div>
+            </div>
+
+            <div class="vm-grid">
+              <div class="node">
+                <div class="node-head">
+                  <svg><use href="#i-lock" /></svg>
+                  <div class="node-name">Bastion Host</div>
+                </div>
+                <span class="ip int">10.10.10.10</span>
+                <div class="vm-role">관리자 / 개발자 접속</div>
+              </div>
+              <div class="node">
+                <div class="node-head">
+                  <svg><use href="#i-portal" /></svg>
+                  <div class="node-name">CMP VM</div>
+                </div>
+                <span class="ip int">10.10.10.11</span>
+                <div class="vm-role">CMP Portal DEV</div>
+              </div>
+              <div class="node">
+                <div class="node-head">
+                  <svg><use href="#i-k8s" /></svg>
+                  <div class="node-name">K8s Master</div>
+                </div>
+                <span class="ip int">10.10.10.100</span>
+                <div class="vm-role">Kubernetes Control Plane</div>
+              </div>
+              <div class="node">
+                <div class="node-head">
+                  <svg><use href="#i-k8s" /></svg>
+                  <div class="node-name">K8s Worker 01</div>
+                </div>
+                <span class="ip int">10.10.10.101</span>
+                <div class="vm-role">Kubernetes Worker Node</div>
+              </div>
+              <div class="node">
+                <div class="node-head">
+                  <svg><use href="#i-k8s" /></svg>
+                  <div class="node-name">K8s Worker 02</div>
+                </div>
+                <span class="ip int">10.10.10.102</span>
+                <div class="vm-role">Kubernetes Worker Node</div>
+              </div>
+              <div class="node vm-gpu">
+                <div class="node-head">
+                  <svg><use href="#i-gpu" /></svg>
+                  <div class="node-name">GPU VM 01</div>
+                </div>
+                <span class="ip int">10.10.10.20</span>
+                <div class="vm-role">H200 × 1 · AI / LLM / RAG</div>
+              </div>
+              <div class="node vm-gpu">
+                <div class="node-head">
+                  <svg><use href="#i-gpu" /></svg>
+                  <div class="node-name">GPU VM 02</div>
+                </div>
+                <span class="ip int">10.10.10.21</span>
+                <div class="vm-role">H200 × 1 · AI / LLM / RAG</div>
+              </div>
+              <div class="node vm-lb">
+                <div class="node-head">
+                  <svg><use href="#i-lb" /></svg>
+                  <div class="node-name">LB / Ingress</div>
+                </div>
+                <span class="ip int">10.10.10.50</span>
+                <div class="vm-role">Load Balancer · ALB / NLB</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FC SAN -->
+          <div class="panel san">
+            <div class="panel-label">FC SAN Storage</div>
+            <div class="san-sw">
+              FC Switch (A)<small>Fabric A</small>
+            </div>
+            <div class="vline san"></div>
+            <div class="san-sw">
+              FC Switch (B)<small>Fabric B</small>
+            </div>
+            <div class="vline san"></div>
+            <div class="san-store">
+              <svg><use href="#i-db" /></svg>
+              <div class="node-name">FC SAN Storage</div>
+              <div class="san-link">◀ gpu01 ↔ FC Switch A / B 이중 경로</div>
+            </div>
+            <ul>
+              <li>LUN 제공 (Block Storage)</li>
+              <li>Cinder 백엔드 스토리지</li>
+              <li>OpenStack Volumes</li>
+              <li>Nova / Cinder 사용</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 네트워크 / IP / 특징 -->
+    <section id="network" style="background: var(--white)">
+      <div class="container">
+        <h2 class="section-title">네트워크 · <span>IP 계획</span></h2>
+        <p class="section-sub">
+          관리/대외 Public 대역과 OpenStack 내부 대역을 분리하여 운영
+        </p>
+        <div class="info-grid">
+          <div class="info-card" style="background: var(--gray-50)">
+            <h3>네트워크 대역</h3>
+            <div class="net-block">
+              <b>Public Network (관리/대외)</b>
+              <span class="ip pub">x.x.x.0/25</span>
+              <span class="ip pub">GW x.x.x.254</span>
+            </div>
+            <div class="net-block">
+              <b>Internal Network (OpenStack 내부)</b>
+              <span class="ip int">10.10.10.0/24</span>
+              <span class="ip int">GW 10.10.10.1 (Router)</span>
+            </div>
+          </div>
+
+          <div class="info-card" style="background: var(--gray-50)">
+            <h3>Public IP 할당 계획</h3>
+            <dl class="kv">
+              <dt>x.x.x.211</dt><dd>ctrl01</dd>
+              <dt>x.x.x.212</dt><dd>ctrl02</dd>
+              <dt>x.x.x.213</dt><dd>ctrl03</dd>
+              <dt>x.x.x.214</dt><dd>gpu01</dd>
+              <dt>x.x.x.215</dt><dd>VIP</dd>
+              <hr />
+              <dt>x.x.x.216</dt><dd>Bastion</dd>
+              <dt>x.x.x.217</dt><dd>CMP VM</dd>
+              <dt>x.x.x.218</dt><dd>CPU VM 01</dd>
+              <dt>x.x.x.219</dt><dd>GPU VM 02</dd>
+              <dt>x.x.x.220</dt><dd>LB / Ingress</dd>
+            </dl>
+          </div>
+
+          <div class="info-card" style="background: var(--gray-50)">
+            <h3>범례</h3>
+            <ul class="legend">
+              <li>
+                <i style="background: var(--net-internal); color: var(--net-internal)"></i>
+                Internal Network (10.10.10.0/24)
+              </li>
+              <li>
+                <i style="background: var(--net-public); color: var(--net-public)"></i>
+                Public Network (x.x.x.0/25)
+              </li>
+              <li>
+                <i style="background: var(--net-san); color: var(--net-san)"></i>
+                FC Storage Network (SAN)
+              </li>
+            </ul>
+            <h3 style="margin-top: 1.5rem">주요 특징</h3>
+            <ul class="feature-list">
+              <li>Controller 3대 HA 구성</li>
+              <li>OVN 기반 L2 / L3 네트워킹</li>
+              <li>GPU H200 × 4 (gpu01)</li>
+              <li>Bastion을 통한 접근제어</li>
+              <li>Floating IP로 외부 서비스 제공</li>
+              <li>Kubernetes 기반 AI 플랫폼 구동</li>
+            </ul>
+          </div>
+        </div>
+        <p class="note">
+          ※ 보안을 위해 공인 IP 앞자리는 x.x.x 로 마스킹했습니다. 내부 IP(10.10.10.0/24)는
+          사설 대역입니다.
+        </p>
+      </div>
+    </section>
+
+    <!-- 접속 흐름 -->
+    <section id="access">
+      <div class="container">
+        <h2 class="section-title">외부 접속 · <span>서비스 라우팅</span></h2>
+        <p class="section-sub">
+          Floating IP로 Bastion · CMP · Ingress를 노출하고, CMP Portal에서 각 Backend
+          API로 라우팅 (예시)
+        </p>
+
+        <div class="flow">
+          <div class="actor">
+            <svg><use href="#i-users" /></svg>
+            개발자 / 관리자
+          </div>
+          <div class="fip-grid">
+            <div class="fip">
+              <small>Floating IP</small>
+              <b>x.x.x.216</b>
+              <span>Bastion Host · SSH 접속</span>
+            </div>
+            <div class="fip">
+              <small>Floating IP</small>
+              <b>x.x.x.217</b>
+              <span>CMP Portal · www.cmp.com</span>
+            </div>
+            <div class="fip">
+              <small>Floating IP</small>
+              <b>x.x.x.220</b>
+              <span>Ingress LB · *.example.com</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="route">
+          <div class="route-chain">
+            <div class="route-step first">CMP Portal</div>
+            <span class="arrow">→</span>
+            <div class="route-step">Backend API<small>OpenStack API</small></div>
+            <span class="arrow">→</span>
+            <div class="route-step">Backend API<small>Kubernetes API</small></div>
+            <span class="arrow">→</span>
+            <div class="route-step">Backend API<small>GPUaaS API</small></div>
+            <span class="arrow">→</span>
+            <div class="route-step">Backend API<small>Monitoring API</small></div>
+          </div>
+        </div>
+
+        <a href="index.html#projects" class="back-link">← 프로젝트 목록으로</a>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2026 이태운 · Cloud Transformation Architect · 24년 경력</p>
+    </footer>
+  </body>
+</html>
