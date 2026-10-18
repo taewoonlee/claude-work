@@ -49,3 +49,9 @@
   - 백업: `mdc-openstack.before-nonav.html.bak`
   - `<nav>` HTML + 메뉴 전용 CSS 삭제, 고정 메뉴용 상단 여백(8rem→4rem, 모바일 6.5rem→3rem)·scroll-margin 정리
   - 메인 복귀는 하단 "← 프로젝트 목록으로" 버튼 유지 / 데스크톱·모바일 캡처로 확인
+- [추가] 패킷 흐름에 응답(역방향) 추가
+  - 백업: `mdc-openstack.before-return.html.bak`
+  - 요청이 VM 도착 후 주황색 응답 패킷이 VM → VM Network → OVN → 노드 → VIP → L2 → FW → Internet 순으로 1회 (약 12.8초 종료)
+  - SAN은 Storage → B → A, 서비스 라우팅은 끝까지 간 뒤 되돌아옴
+  - 구성도 위에 범례(● 요청 / ● 응답) 추가, 각 선의 두 번째 표시 요소(::before) 사용
+  - 6.9/9.5/12.45/14초 정지 캡처로 순서·정지 확인, 모바일 가로 넘침 없음

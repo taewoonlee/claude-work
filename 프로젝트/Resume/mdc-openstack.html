@@ -21,6 +21,7 @@
         --net-public: #60a5fa;
         --net-san: #f87171;
         --gpu: #a3e635;
+        --ret: #fb923c; /* 응답(역방향) 패킷 */
       }
 
       * {
@@ -390,6 +391,135 @@
       .route-chain > .arrow:nth-of-type(2) { --d: 0.5s; }
       .route-chain > .arrow:nth-of-type(3) { --d: 1s; }
       .route-chain > .arrow:nth-of-type(4) { --d: 1.5s; }
+
+      /* ── 응답(역방향) 패킷: 요청이 VM에 도착한 뒤 주황색으로 되돌아 나감 ──
+         --r = 각 연결선의 응답 출발 시각 */
+      .vline::before,
+      .arrow::before {
+        content: "";
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--ret);
+        box-shadow: 0 0 6px 2px var(--ret);
+        opacity: 0;
+        pointer-events: none;
+      }
+      .vline::before {
+        left: 50%;
+        top: calc(100% - 3px);
+        margin-left: -3px;
+      }
+      .arrow::before {
+        top: 50%;
+        left: calc(100% - 2px);
+        margin-top: -3px;
+      }
+      .bus::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(251, 146, 60, 0.18),
+          transparent
+        );
+        transform: translateX(100%);
+        pointer-events: none;
+      }
+      .play .vline::before {
+        animation: pkt-up 0.6s linear var(--r, 0s) 1;
+      }
+      .play .arrow::before {
+        animation: pkt-left 0.5s linear var(--r, 0s) 1;
+      }
+      .play .bus::before {
+        animation: bus-sweep-back 0.8s ease-in-out var(--r, 0s) 1;
+      }
+      @keyframes pkt-up {
+        0% {
+          top: calc(100% - 3px);
+          opacity: 0;
+        }
+        20%,
+        80% {
+          opacity: 1;
+        }
+        100% {
+          top: -3px;
+          opacity: 0;
+        }
+      }
+      @keyframes pkt-left {
+        0% {
+          left: calc(100% - 2px);
+          opacity: 0;
+        }
+        20%,
+        80% {
+          opacity: 1;
+        }
+        100% {
+          left: -4px;
+          opacity: 0;
+        }
+      }
+      @keyframes bus-sweep-back {
+        to {
+          transform: translateX(-100%);
+        }
+      }
+      /* 응답 순서: VM → VM Network → OVN → Controller/GPU → VIP → L2 → FW → Internet */
+      .bus.int + .connectors .vline { --r: 6.6s; }
+      .bus.int { --r: 7.2s; }
+      .bus.ovn + .vline { --r: 7.8s; }
+      .bus.ovn { --r: 8.4s; }
+      .ctrl-grid + .connectors .vline { --r: 9.2s; }
+      .bus.pub + .connectors .vline { --r: 9.8s; }
+      .bus.pub { --r: 10.4s; }
+      .edge-row + .vline { --r: 11.2s; }
+      .edge-row > .arrow:nth-of-type(2) { --r: 11.8s; }
+      .edge-row > .arrow:nth-of-type(1) { --r: 12.3s; }
+      /* FC SAN: Storage → Switch B → A */
+      .panel.san > .vline:nth-child(5) { --r: 9.2s; }
+      .panel.san > .vline:nth-child(3) { --r: 9.8s; }
+      /* 서비스 라우팅: 끝까지 간 뒤 되돌아옴 */
+      .route-chain > .arrow:nth-of-type(4) { --r: 2.2s; }
+      .route-chain > .arrow:nth-of-type(3) { --r: 2.7s; }
+      .route-chain > .arrow:nth-of-type(2) { --r: 3.2s; }
+      .route-chain > .arrow:nth-of-type(1) { --r: 3.7s; }
+
+      .flow-ctrl {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem 1.25rem;
+        margin: -1rem 0 1.5rem;
+      }
+      .flow-legend {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.78rem;
+        color: var(--gray-500);
+      }
+      .flow-legend i {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 0.35rem;
+        vertical-align: middle;
+      }
+      .flow-legend .req {
+        background: var(--net-public);
+        box-shadow: 0 0 6px 1px var(--net-public);
+      }
+      .flow-legend .res {
+        background: var(--ret);
+        box-shadow: 0 0 6px 1px var(--ret);
+      }
       .replay-btn {
         background: transparent;
         color: #2dd4bf;
@@ -398,7 +528,6 @@
         font-size: 0.8rem;
         font-weight: 600;
         padding: 0.35rem 1rem;
-        margin: -1rem 0 1.5rem;
         cursor: pointer;
         transition: background 0.2s;
       }
@@ -408,11 +537,14 @@
       @media (prefers-reduced-motion: reduce) {
         .vline::after,
         .arrow::after,
-        .bus::after {
+        .bus::after,
+        .vline::before,
+        .arrow::before,
+        .bus::before {
           animation: none !important;
           display: none;
         }
-        .replay-btn {
+        .flow-ctrl {
           display: none;
         }
       }
@@ -1108,9 +1240,15 @@
           Internet → 방화벽 → L2 스위치 → OpenStack 클러스터 → VM 네트워크 / FC
           SAN 스토리지
         </p>
-        <button class="replay-btn" type="button" id="replay-packets">
-          ▶ 패킷 흐름 다시 보기
-        </button>
+        <div class="flow-ctrl">
+          <button class="replay-btn" type="button" id="replay-packets">
+            ▶ 패킷 흐름 다시 보기
+          </button>
+          <span class="flow-legend">
+            <span><i class="req"></i>요청 (Internet → VM)</span>
+            <span><i class="res"></i>응답 (VM → Internet)</span>
+          </span>
+        </div>
 
         <!-- 1. 엣지 -->
         <div class="edge-row">
